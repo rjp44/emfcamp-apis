@@ -1,0 +1,40 @@
+{
+  "prompt": {
+    "value": "You are a helpful agent, people will call and ask you questions about EMFCamp, find the answers from available data sources.\n\nGive a very short spoken summary of your recommendations, but explain your reasoning.\n\nYou are on the phone so don't attempt to output any markdown markup or complex verbose text. No numbered lists or asterisks in the output please!",
+    "changed": true,
+    "changedSinceCreate": true
+  },
+  "agent": null,
+  "language": "en-GB",
+  "voice": "elevenlabs:V6npAJpS6o6qBl7ztXHv",
+  "functions": [
+    {
+      "implementation": "rest",
+      "name": "get_villages",
+      "description": "Search villages at emfcamp, returns all villages that contain any of the the text specified in search parameter",
+      "url": "http://localhost:3010/villages?search={search}",
+      "method": "get",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "search",
+          "description": "A string of comma separated search terms. All results that match any search term are returned so prime this string with as many synonyms, as you can think of for your user query. Use signular expressions rather than plurals as this is a basic text search"
+        }
+      ]
+    },
+    {
+      "implementation": "rest",
+      "name": "get_schedule",
+      "description": "Get a schedule of talks and events at EMFCamp which mention a specific search string",
+      "method": "get",
+      "url": "http://localhost:3010/schedule?search={search}",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "search",
+          "description": "A comma separated list of possible search terms usually the principle search term and any synonyms, use singular not plural terms"
+        }
+      ]
+    }
+  ]
+}
