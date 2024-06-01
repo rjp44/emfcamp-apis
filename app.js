@@ -34,7 +34,7 @@ app.get('/schedule', async (req, res) => {
         (talk.title + talk.speaker + talk.description).match(searches));
     return res.json(results);
   }
-  else if (upcoming != null) {
+  else if (upcoming) {
     return (
       res.json(
         future.filter((talk) => (
