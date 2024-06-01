@@ -26,7 +26,7 @@ app.get('/schedule', async (req, res) => {
   let { data: villages } = await Villages;
 
   let future = schedules
-    .filter(talk => !talk.end_date || (new Date(talk.end_date).valueOf()) > now.valueOf());
+    .filter(talk => !talk.end_date || (new Date(`${talk.end_date} UTC+1`).valueOf()) > now.valueOf());
   if (search) {
     let searches = new RegExp(`(${search.replace(/,/g, "|")})`, "i");
     const results = future
@@ -37,16 +37,18 @@ app.get('/schedule', async (req, res) => {
   else if (upcoming) {
     return (
       res.json(
-        future.filter((talk) => (
-          talk.start_date &&
-          ((new Date(talk.start_date)).valueOf() < nextHour)
-        )
-        )
+        future.filter((talk) => {
+          let start = talk.start_date && (new Date(`${talk.start_date} UTC+1`)).valueOf();
+          return start && start < nextHour && start > now;
+        })
       )
     );
+
+
+
   }
 
-  res.json(future);
+  return res.json(future);
 });
 
 // Village endpoint
