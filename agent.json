@@ -1,24 +1,24 @@
 {
   "prompt": {
-    "value": "You are a helpful agent, people will call and ask you questions about EMFCamp, find the answers from available data sources.\n\nGive a very short spoken summary of your recommendations, but explain your reasoning.\n\nYou are on the phone so don't attempt to output any markdown markup or complex verbose text. No numbered lists or asterisks in the output please!",
+    "value": "You are a helpful agent, people will call and ask you questions about E M F Camp, find the answers from available API calls. Start by answering the phone and telling the user that you are EMF robo help and want them to enjoy their EMF camp experience by helping in any way that you can.\n\nIf the caller is unsure about what they want then ask them some questions to determine their interests and then query the APIs that you have to make a max of one or two very summarised suggestions for scheduled talks of villages that may interest them in a simple spoken sentence ot two. No numbered lists or text formatting.\n\nBefore querying APIs, which may take a while, tell the user what you are doing in a humourous way so they don't get bored waiting for you.\n\nDo not give information about schedule events that have a start_date and start_time in the past unless you have no other results to share. In that case make it clear the event has already ended.\n\nYou are on the phone so give short, very summarised answers don't attempt to output any markdown markup or complex verbose text. No numbered lists or asterisks in the output please!",
     "changed": true,
     "changedSinceCreate": true
   },
   "agent": null,
   "language": "en-GB",
-  "voice": "elevenlabs:V6npAJpS6o6qBl7ztXHv",
+  "voice": "aws:Amy",
   "functions": [
     {
       "implementation": "rest",
       "name": "get_villages",
       "description": "Search villages at emfcamp, returns all villages that contain any of the the text specified in search parameter",
-      "url": "http://localhost:3010/villages?search={search}",
+      "url": "https://emfcamp-apis-37viybmxjq-nw.a.run.app/villages?search={search}",
       "method": "get",
       "parameters": [
         {
           "type": "string",
           "name": "search",
-          "description": "A string of comma separated search terms. All results that match any search term are returned so prime this string with as many synonyms, as you can think of for your user query. Use signular expressions rather than plurals as this is a basic text search"
+          "description": "A string of comma separated search terms. All results that match any search term are returned so prime this string with any synonyms you can suggest for your user query. Use signular expressions rather than plurals as this is a basic text search"
         }
       ]
     },
@@ -27,12 +27,27 @@
       "name": "get_schedule",
       "description": "Get a schedule of talks and events at EMFCamp which mention a specific search string",
       "method": "get",
-      "url": "http://localhost:3010/schedule?search={search}",
+      "url": "https://emfcamp-apis-37viybmxjq-nw.a.run.app/schedule?search={search}",
       "parameters": [
         {
           "type": "string",
           "name": "search",
-          "description": "A comma separated list of possible search terms usually the principle search term and any synonyms, use singular not plural terms"
+          "description": "A comma separated list of possible search terms. Usually the principle search term and any synonyms, use singular not plural terms"
+        }
+      ]
+    },
+    {
+      "implementation": "rest",
+      "name": "get_upcoming",
+      "description": "Gets information about upcoming scheduled events",
+      "method": "get",
+      "url": "https://emfcamp-apis-37viybmxjq-nw.a.run.app/schedule?upcoming=1",
+      "result": "foo",
+      "parameters": [
+        {
+          "type": "number",
+          "name": "upcoming",
+          "description": "number greater than 0"
         }
       ]
     }
