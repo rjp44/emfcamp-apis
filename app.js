@@ -19,7 +19,7 @@ let Villages = axios.get('https://www.emfcamp.org/api/villages');
 // Schedule endpoint
 app.get('/schedule', async (req, res) => {
   const { search, upcoming } = req.query;
-  let now = new Date();
+  let now = new Date("2024-05-30 17:00:00 UTC+1"); // At the start of EMFCamp
   let nextHour = now.valueOf() + (60 * 60 * 1000);
 
   let { data: schedules } = await Schedules;
