@@ -2,6 +2,7 @@ const express = require('express');
 var cors = require('cors');
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const truncate = import('truncate-text-between-words');
 
 
 
@@ -24,6 +25,9 @@ app.get('/schedule', async (req, res) => {
 
   let { data: schedules } = await Schedules;
   let { data: villages } = await Villages;
+  const {
+    truncateText
+  } = await truncate;
 
   let future = schedules
     .filter(talk => !talk.end_date || (new Date(`${talk.end_date} UTC+1`).valueOf()) > now.valueOf());
@@ -31,7 +35,8 @@ app.get('/schedule', async (req, res) => {
     let searches = new RegExp(`(${search.replace(/,/g, "|")})`, "i");
     const results = future
       .filter((talk) =>
-        (talk.title + talk.speaker + talk.description).match(searches));
+        (talk.title + talk.speaker + talk.description).match(searches))
+      .map(({ title, description, start_date, end_date, speaker }) => ({ title, description: truncateText(description, 300), start_date, end_date, speaker }));
     return res.json(results);
   }
   else if (upcoming) {
@@ -54,6 +59,9 @@ app.get('/schedule', async (req, res) => {
 // Village endpoint
 app.get('/villages', async (req, res) => {
   const { search } = req.query;
+  const {
+    truncateText
+  } = await truncate;
 
   let { data: schedules } = await Schedules;
   let { data: villages } = await Villages;
@@ -61,8 +69,8 @@ app.get('/villages', async (req, res) => {
   if (search) {
     let searches = new RegExp(`(${search.replace(/,/g, "|")})`, "i");
     const results = villages.filter((village) =>
-      (village.name + village.description).match(searches));
-
+      (village.name + village.description).match(searches))
+      .map(({ name, description }) => ({ name, description: truncateText(description, 300), start_date, end_date, speaker }));;
     return res.json(results);
   }
 
