@@ -36,7 +36,7 @@ app.get('/schedule', async (req, res) => {
     const results = future
       .filter((talk) =>
         (talk.title + talk.speaker + talk.description).match(searches))
-      .map(({ title, description, start_date, end_date, speaker }) => ({ title, description: truncateText(description, 300), start_date, end_date, speaker }));
+      .map(({ title, description, start_date, end_date, speaker, venue }) => ({ title, description: truncateText(description, 300), start_date, end_date, speaker, venue }));
     return res.json(results);
   }
   else if (upcoming) {
