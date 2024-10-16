@@ -70,7 +70,7 @@ app.get('/villages', async (req, res) => {
     let searches = new RegExp(`(${search.replace(/,/g, "|")})`, "i");
     const results = villages.filter((village) =>
       (village.name + village.description).match(searches))
-      .map(({ name, description }) => ({ name, description: truncateText(description, 300), start_date, end_date, speaker }));;
+      .map(({ name, description }) => ({ name, description: truncateText(description, 300) }));;
     return res.json(results);
   }
 
